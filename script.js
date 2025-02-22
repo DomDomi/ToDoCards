@@ -8,8 +8,9 @@ const firebaseConfig = {
     appId: "1:3981782181:web:fa94888215d8b7b10ab14c"
 };
 
-firebase.initializeApp(firebaseConfig);
+const app = firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
+
 
 document.body.innerHTML = `
     <input type="text" id="search" placeholder="Suche...">
