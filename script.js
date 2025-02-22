@@ -90,5 +90,7 @@ document.getElementById("search").addEventListener("input", searchCards);
 
 document.getElementById("addCardButton").addEventListener("click", addCard);
 
-// Karten laden
-loadCards();
+document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById("addCardButton").addEventListener("click", addCard);
+    loadCards();
+});
