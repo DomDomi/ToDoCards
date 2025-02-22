@@ -1,0 +1,4 @@
+body { font-family: Arial, sans-serif; padding: 20px; }
+.container { display: flex; gap: 10px; }
+.stack { flex: 1; padding: 10px; background: #f1f1f1; min-height: 200px; border-radius: 5px; }
+.card { background: white; padding: 10px; margin: 5px 0; border-radius: 3px; cursor: grab; }
