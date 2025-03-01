@@ -48,6 +48,7 @@ document.getElementById("addCardButton").addEventListener("click", () => {
     selectedColor = "#ffffff";
     cardModal.style.display = "block";
     currentEditId = null;
+    loadCards();
 });
 
 // Karte speichern oder aktualisieren
@@ -75,4 +76,4 @@ function renderCard(id, data) {
     stacks[data.status].appendChild(card);
 }
 
-loadCards();
+
