@@ -47,8 +47,6 @@ document.getElementById("addCardButton").addEventListener("click", () => {
     cardTextInput.value = "";
     selectedColor = "#ffffff";
     cardModal.style.display = "block";
-    currentEditId = null;
-    loadCards();
 });
 
 // Karte speichern oder aktualisieren
@@ -66,6 +64,14 @@ saveCardBtn.addEventListener("click", () => {
     cardModal.style.display = "none";
 });
 
+// 🔹 Karten aus Firebase abrufen & laden
+function loadCards() {
+    db.collection("cards").onSnapshot(snapshot => {
+        document.querySelectorAll(".card").forEach(card => card.remove());
+        snapshot.forEach(doc => renderCard(doc.id, doc.data()));
+    });
+}
+
 // Karte rendern
 function renderCard(id, data) {
     const card = document.createElement("div");
@@ -75,5 +81,7 @@ function renderCard(id, data) {
     card.querySelector(".edit").addEventListener("click", () => editCard(id, data));
     stacks[data.status].appendChild(card);
 }
+
+currentEditId = null;
 
 
