@@ -108,7 +108,10 @@ document.getElementById("toggleArchive").addEventListener("click", () => {
     stacks.archive.classList.toggle("minimized");
 });
 
-document.getElementById("search").addEventListener("input", searchCards);
+document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById("search").addEventListener("input", searchCards);
+});
+
 //document.getElementById("addCardButton").addEventListener("click", addCard);
 //loadCards();
 
