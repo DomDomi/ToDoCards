@@ -21,7 +21,7 @@ body {
 .card {
     background: white;
     padding: 10px;
-    margin-top: -20px; /* Negative Margin für Überlappung */
+    margin-top: -25px; /* Negative Margin für Überlappung */
     border-radius: 3px;
     cursor: grab;
     position: relative;
@@ -31,6 +31,19 @@ body {
 /* Erste Karte soll nicht überlappen */
 .stack .card:first-child {
     margin-top: 0;
+}
+
+/* Nur die Überschrift ist sichtbar */
+.card .card-title {
+    font-weight: bold;
+}
+
+.card .card-text {
+    display: none; /* Beschreibung wird standardmäßig versteckt */
+}
+
+.card:hover .card-text {
+    display: block; /* Beschreibung wird sichtbar, wenn mit der Maus drüber */
 }
 
 .card .edit {
@@ -48,12 +61,24 @@ body {
     cursor: pointer;
 }
 
-.minimized {
-    height: 30px;
-    overflow: hidden;
+/* Modal Fenster */
+.modal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
 
-/* Farbauswahl-Buttons */
+.modal-content {
+    display: flex;
+    flex-direction: column;
+}
+
 .color-picker button {
     width: 30px;
     height: 30px;
@@ -61,10 +86,4 @@ body {
     margin: 5px;
     cursor: pointer;
     border-radius: 50%;
-}
-
-.color-picker input {
-    margin-top: 5px;
-    padding: 5px;
-    width: 100px;
 }
