@@ -20,12 +20,52 @@ const stacks = {
     archive: document.getElementById("archive")
 };
 
+// Vordefinierte Farben
+const predefinedColors = {
+    rot: "#ff4d4d",
+    blau: "#4d79ff",
+    gelb: "#ffd633",
+    grün: "#47d147",
+    petrol: "#008080"
+};
+
 // Karte erstellen
 function addCard() {
     const task = prompt("Aufgabe eingeben:");
     if (!task) return;
-    
-    const color = prompt("Farbe wählen (rot, blau, gelb, grün, petrol oder hex-code):", "#ffffff");
+
+    // Farbauswahl-Dialog
+    const colorDialog = document.createElement("div");
+    colorDialog.innerHTML = `
+        <h3>Farbe wählen:</h3>
+        <div class="color-picker">
+            ${Object.entries(predefinedColors).map(([name, color]) => `
+                <button style="background: ${color}" onclick="selectColor('${color}')"></button>
+            `).join("")}
+            <input type="text" id="customColor" placeholder="Hex-Code">
+            <button onclick="useCustomColor()">✅</button>
+        </div>
+    `;
+    document.body.appendChild(colorDialog);
+
+    window.selectColor = (color) => {
+        saveCard(task, color);
+        colorDialog.remove();
+    };
+
+    window.useCustomColor = () => {
+        const customColor = document.getElementById("customColor").value;
+        if (/^#([0-9A-F]{3}){1,2}$/i.test(customColor)) {
+            saveCard(task, customColor);
+            colorDialog.remove();
+        } else {
+            alert("Ungültiger Hex-Code!");
+        }
+    };
+}
+
+// Karte speichern
+function saveCard(task, color) {
     const card = {
         text: task,
         status: "open",
@@ -62,21 +102,41 @@ function renderCard(id, data) {
     card.addEventListener("dragstart", event => {
         event.dataTransfer.setData("id", id);
     });
-    
+
     stacks[data.status].appendChild(card);
 }
 
 // Bearbeiten einer Karte
 function editCard(id, data) {
     const newText = prompt("Neuer Text:", data.text);
-    const newColor = prompt("Neue Farbe (rot, blau, gelb, grün, petrol oder hex-code):", data.color);
-    if (newText) {
-        db.collection("cards").doc(id).update({
-            text: newText,
-            color: newColor,
-            updatedAt: new Date().toISOString()
-        });
+    if (!newText) return;
+
+    // Farbauswahl für Bearbeitung
+    const colorDialog = document.createElement("div");
+    colorDialog.innerHTML = `
+        <h3>Neue Farbe wählen:</h3>
+        <div class="color-picker">
+            ${Object.entries(predefinedColors).map(([name, color]) => `
+                <button style="background: ${color}" onclick="updateCard('${id}', '${newText}', '${color}')"></button>
+            `).join("")}
+            <input type="text" id="editCustomColor" placeholder="Hex-Code">
+            <button onclick="updateCard('${id}', '${newText}', document.getElementById('editCustomColor').value)">✅</button>
+        </div>
+    `;
+    document.body.appendChild(colorDialog);
+}
+
+// Karte aktualisieren
+function updateCard(id, newText, newColor) {
+    if (!/^#([0-9A-F]{3}){1,2}$/i.test(newColor) && !Object.values(predefinedColors).includes(newColor)) {
+        alert("Ungültige Farbe!");
+        return;
     }
+    db.collection("cards").doc(id).update({
+        text: newText,
+        color: newColor,
+        updatedAt: new Date().toISOString()
+    }).then(() => document.querySelector(".color-picker").remove());
 }
 
 // Drag & Drop Event-Listener
@@ -90,31 +150,8 @@ Object.keys(stacks).forEach(status => {
     });
 });
 
-// Mülltonnen-Funktion
-const trashBin = document.getElementById("trash");
-trashBin.addEventListener("dragover", event => event.preventDefault());
-trashBin.addEventListener("drop", event => {
-    event.preventDefault();
-    const id = event.dataTransfer.getData("id");
-    if (confirm("Karte löschen oder ins Archiv verschieben? (OK = Löschen, Abbrechen = Archiv)")) {
-        db.collection("cards").doc(id).delete();
-    } else {
-        db.collection("cards").doc(id).update({ status: "archive", updatedAt: new Date().toISOString() });
-    }
-});
-
-// Archiv minimieren/erweitern
-document.getElementById("toggleArchive").addEventListener("click", () => {
-    stacks.archive.classList.toggle("minimized");
-});
-
-document.addEventListener("DOMContentLoaded", () => {
-    document.getElementById("search").addEventListener("input", searchCards);
-});
-
 //document.getElementById("addCardButton").addEventListener("click", addCard);
 //loadCards();
-
 
 document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("addCardButton").addEventListener("click", addCard);
