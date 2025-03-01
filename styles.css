@@ -12,18 +12,25 @@ body {
     flex: 1;
     padding: 10px;
     background: #f1f1f1;
-    min-height: 200px;
+    min-height: 250px;
     border-radius: 5px;
     position: relative;
 }
 
+/* Karten überlappen leicht */
 .card {
     background: white;
     padding: 10px;
-    margin: 5px 0;
+    margin-top: -20px; /* Negative Margin für Überlappung */
     border-radius: 3px;
     cursor: grab;
     position: relative;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Erste Karte soll nicht überlappen */
+.stack .card:first-child {
+    margin-top: 0;
 }
 
 .card .edit {
@@ -44,4 +51,20 @@ body {
 .minimized {
     height: 30px;
     overflow: hidden;
+}
+
+/* Farbauswahl-Buttons */
+.color-picker button {
+    width: 30px;
+    height: 30px;
+    border: none;
+    margin: 5px;
+    cursor: pointer;
+    border-radius: 50%;
+}
+
+.color-picker input {
+    margin-top: 5px;
+    padding: 5px;
+    width: 100px;
 }
