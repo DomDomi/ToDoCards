@@ -11,24 +11,13 @@ const firebaseConfig = {
 const app = firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
-
-document.body.innerHTML = `
-    <input type="text" id="search" placeholder="Suche...">
-    <button id="addCardButton">Karte hinzufügen</button>
-    <div class="container">
-        <div id="open" class="stack"><h3>Offen</h3></div>
-        <div id="inProgress" class="stack"><h3>In Arbeit</h3></div>
-        <div id="postponed" class="stack"><h3>Zurückgestellt</h3></div>
-        <div id="done" class="stack"><h3>Fertig</h3></div>
-    </div>
-`;
-
 // Stacks für die Karten
 const stacks = {
     open: document.getElementById("open"),
     inProgress: document.getElementById("inProgress"),
     postponed: document.getElementById("postponed"),
-    done: document.getElementById("done")
+    done: document.getElementById("done"),
+    archive: document.getElementById("archive")
 };
 
 // Karte erstellen
@@ -36,16 +25,18 @@ function addCard() {
     const task = prompt("Aufgabe eingeben:");
     if (!task) return;
     
+    const color = prompt("Farbe wählen (rot, blau, gelb, grün, petrol oder hex-code):", "#ffffff");
     const card = {
         text: task,
         status: "open",
-        timestamp: new Date().toISOString()
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        color: color
     };
-
     db.collection("cards").add(card);
 }
 
-// Karten aus der Datenbank laden
+// Karten laden
 function loadCards() {
     db.collection("cards").onSnapshot(snapshot => {
         document.querySelectorAll(".card").forEach(card => card.remove());
@@ -58,9 +49,16 @@ function renderCard(id, data) {
     const card = document.createElement("div");
     card.className = "card";
     card.draggable = true;
-    card.innerHTML = `<strong>${data.text}</strong><br><small>${new Date(data.timestamp).toLocaleString()}</small>`;
+    card.style.backgroundColor = data.color;
+    card.innerHTML = `
+        <strong>${data.text}</strong>
+        <small>Erstellt: ${new Date(data.createdAt).toLocaleString()}</small>
+        <small>Geändert: ${new Date(data.updatedAt).toLocaleString()}</small>
+        <span class="edit">✏️</span>
+    `;
     card.dataset.id = id;
 
+    card.querySelector(".edit").addEventListener("click", () => editCard(id, data));
     card.addEventListener("dragstart", event => {
         event.dataTransfer.setData("id", id);
     });
@@ -68,30 +66,54 @@ function renderCard(id, data) {
     stacks[data.status].appendChild(card);
 }
 
-// Drag & Drop Event-Listener für die Stapel
+// Bearbeiten einer Karte
+function editCard(id, data) {
+    const newText = prompt("Neuer Text:", data.text);
+    const newColor = prompt("Neue Farbe (rot, blau, gelb, grün, petrol oder hex-code):", data.color);
+    if (newText) {
+        db.collection("cards").doc(id).update({
+            text: newText,
+            color: newColor,
+            updatedAt: new Date().toISOString()
+        });
+    }
+}
+
+// Drag & Drop Event-Listener
 Object.keys(stacks).forEach(status => {
     const stack = stacks[status];
     stack.addEventListener("dragover", event => event.preventDefault());
     stack.addEventListener("drop", event => {
         event.preventDefault();
         const id = event.dataTransfer.getData("id");
-        db.collection("cards").doc(id).update({ status, timestamp: new Date().toISOString() });
+        db.collection("cards").doc(id).update({ status, updatedAt: new Date().toISOString() });
     });
 });
 
-// Stichwortsuche
-function searchCards() {
-    const query = document.getElementById("search").value.toLowerCase();
-    document.querySelectorAll(".card").forEach(card => {
-        card.style.display = card.innerText.toLowerCase().includes(query) ? "block" : "none";
-    });
-}
+// Mülltonnen-Funktion
+const trashBin = document.getElementById("trash");
+trashBin.addEventListener("dragover", event => event.preventDefault());
+trashBin.addEventListener("drop", event => {
+    event.preventDefault();
+    const id = event.dataTransfer.getData("id");
+    if (confirm("Karte löschen oder ins Archiv verschieben? (OK = Löschen, Abbrechen = Archiv)")) {
+        db.collection("cards").doc(id).delete();
+    } else {
+        db.collection("cards").doc(id).update({ status: "archive", updatedAt: new Date().toISOString() });
+    }
+});
+
+// Archiv minimieren/erweitern
+document.getElementById("toggleArchive").addEventListener("click", () => {
+    stacks.archive.classList.toggle("minimized");
+});
 
 document.getElementById("search").addEventListener("input", searchCards);
-
 document.getElementById("addCardButton").addEventListener("click", addCard);
+loadCards();
 
-document.addEventListener("DOMContentLoaded", () => {
-    document.getElementById("addCardButton").addEventListener("click", addCard);
-    loadCards();
-});
+
+//document.addEventListener("DOMContentLoaded", () => {
+  //  document.getElementById("addCardButton").addEventListener("click", addCard);
+  //  loadCards();
+//});
