@@ -14,18 +14,33 @@
 
 </head>
 <body>
-    <input type="text" id="search" placeholder="Suche...">
-    <button id="addCardButton">Karte hinzufügen</button>
+    <button id="addCardButton">Neue Karte</button>
+    <div class="container">
+        <div class="stack" id="open"><h2>Offen</h2></div>
+        <div class="stack" id="inProgress"><h2>In Arbeit</h2></div>
+        <div class="stack" id="postponed"><h2>Verschoben</h2></div>
+        <div class="stack" id="done"><h2>Erledigt</h2></div>
+        <div class="stack minimized" id="archive">
+            <h2>Archiv <span id="toggleArchive">[+]</span></h2>
+        </div>
+    </div>
 
+    <!-- Mülltonnen-Icon -->
     <div id="trash" class="trash-bin">🗑️</div>
 
-    <div class="container">
-        <div id="open" class="stack"><h3>Offen</h3></div>
-        <div id="inProgress" class="stack"><h3>In Arbeit</h3></div>
-        <div id="postponed" class="stack"><h3>Zurückgestellt</h3></div>
-        <div id="done" class="stack"><h3>Fertig</h3></div>
-        <div id="archive" class="stack minimized">
-            <h3>Archiv <button id="toggleArchive">📂</button></h3>
+    <!-- Karten-Erstellungs-/Bearbeitungsfenster -->
+    <div id="cardModal" class="modal">
+        <div class="modal-content">
+            <h2 id="modalTitle">Karte erstellen</h2>
+            <input type="text" id="cardTitle" placeholder="Überschrift">
+            <textarea id="cardText" placeholder="Beschreibung"></textarea>
+            <div class="color-picker">
+                <p>Farbe wählen:</p>
+                <div id="colorButtons"></div>
+                <input type="text" id="customColor" placeholder="Eigene Farbe (Hex)">
+            </div>
+            <button id="saveCard">Speichern</button>
+            <button id="closeModal">Abbrechen</button>
         </div>
     </div>
 </body>
