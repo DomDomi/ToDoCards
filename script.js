@@ -109,11 +109,11 @@ document.getElementById("toggleArchive").addEventListener("click", () => {
 });
 
 document.getElementById("search").addEventListener("input", searchCards);
-document.getElementById("addCardButton").addEventListener("click", addCard);
-loadCards();
+//document.getElementById("addCardButton").addEventListener("click", addCard);
+//loadCards();
 
 
-//document.addEventListener("DOMContentLoaded", () => {
-  //  document.getElementById("addCardButton").addEventListener("click", addCard);
-  //  loadCards();
-//});
+document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById("addCardButton").addEventListener("click", addCard);
+    loadCards();
+});
