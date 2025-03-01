@@ -16,11 +16,17 @@
 <body>
     <input type="text" id="search" placeholder="Suche...">
     <button id="addCardButton">Karte hinzufügen</button>
+
+    <div id="trash" class="trash-bin">🗑️</div>
+
     <div class="container">
         <div id="open" class="stack"><h3>Offen</h3></div>
         <div id="inProgress" class="stack"><h3>In Arbeit</h3></div>
         <div id="postponed" class="stack"><h3>Zurückgestellt</h3></div>
         <div id="done" class="stack"><h3>Fertig</h3></div>
+        <div id="archive" class="stack minimized">
+            <h3>Archiv <button id="toggleArchive">📂</button></h3>
+        </div>
     </div>
 </body>
 </html>
