@@ -50,6 +50,14 @@ document.getElementById("addCardButton").addEventListener("click", () => {
     currentEditId = null;
 });
 
+// 🔹 Karten aus Firebase abrufen & laden
+function loadCards() {
+    db.collection("cards").onSnapshot(snapshot => {
+        document.querySelectorAll(".card").forEach(card => card.remove());
+        snapshot.forEach(doc => renderCard(doc.id, doc.data()));
+    });
+}
+
 // Karte speichern oder aktualisieren
 saveCardBtn.addEventListener("click", () => {
     const title = cardTitleInput.value;
