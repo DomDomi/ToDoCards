@@ -62,6 +62,8 @@ saveCardBtn.addEventListener("click", () => {
         db.collection("cards").add({ title, text, status: "open", color, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() });
     }
     cardModal.style.display = "none";
+    currentEditId = null;
+
 });
 
 // 🔹 Karten aus Firebase abrufen & laden
