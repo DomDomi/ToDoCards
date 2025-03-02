@@ -85,5 +85,6 @@ function renderCard(id, data) {
 }
 
 currentEditId = null;
+loadCards();
 
 
