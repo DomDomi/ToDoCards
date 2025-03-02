@@ -119,6 +119,8 @@ function searchCards() {
     });
 }
 
+document.getElementById("search").addEventListener("input", searchCards);
+
 // Archiv minimieren/erweitern
 document.getElementById("toggleArchive").addEventListener("click", () => {
     stacks.archive.classList.toggle("minimized");
