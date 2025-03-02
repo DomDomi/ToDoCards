@@ -14,7 +14,22 @@
 </head>
 <body>
     <input type="text" id="search" placeholder="Suche...">
-    <button id="addCardButton">Karte hinzufügen</button>
+    <!--<button id="addCardButton">Karte hinzufügen</button>-->
+    <!-- Karten-Erstellungs-/Bearbeitungsfenster -->
+    <div id="cardModal" class="modal">
+        <div class="modal-content">
+            <h2 id="modalTitle">Karte erstellen</h2>
+            <input type="text" id="cardTitle" placeholder="Überschrift">
+            <textarea id="cardText" placeholder="Beschreibung"></textarea>
+            <div class="color-picker">
+                <p>Farbe wählen:</p>
+                <div id="colorButtons"></div>
+                <input type="text" id="customColor" placeholder="Eigene Farbe (Hex)">
+            </div>
+            <button id="saveCard">Speichern</button>
+            <button id="closeModal">Abbrechen</button>
+        </div>
+    </div>
 
     <div id="trash" class="trash-bin">🗑️</div>
 
