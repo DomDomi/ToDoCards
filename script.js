@@ -78,9 +78,24 @@ function renderCard(id, data) {
     const card = document.createElement("div");
     card.className = "card";
     card.style.backgroundColor = data.color;
+    card.draggable = true;
     card.innerHTML = `<div class="card-title">${data.title}</div><div class="card-text">${data.text}</div><span class="edit">✏️</span>`;
     card.querySelector(".edit").addEventListener("click", () => editCard(id, data));
+    card.addEventListener("dragstart", event => {
+        event.dataTransfer.setData("id", id);
+    });
     stacks[data.status].appendChild(card);
 }
+
+// Drag & Drop Event-Listener für die Stapel
+Object.keys(stacks).forEach(status => {
+    const stack = stacks[status];
+    stack.addEventListener("dragover", event => event.preventDefault());
+    stack.addEventListener("drop", event => {
+        event.preventDefault();
+        const id = event.dataTransfer.getData("id");
+        db.collection("cards").doc(id).update({ status, timestamp: new Date().toISOString() });
+    });
+});
 
 loadCards();
