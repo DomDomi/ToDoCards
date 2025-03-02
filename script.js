@@ -111,6 +111,14 @@ trashBin.addEventListener("drop", event => {
     }
 });
 
+// Stichwortsuche
+function searchCards() {
+    const query = document.getElementById("search").value.toLowerCase();
+    document.querySelectorAll(".card").forEach(card => {
+        card.style.display = card.innerText.toLowerCase().includes(query) ? "block" : "none";
+    });
+}
+
 // Archiv minimieren/erweitern
 document.getElementById("toggleArchive").addEventListener("click", () => {
     stacks.archive.classList.toggle("minimized");
