@@ -98,4 +98,26 @@ Object.keys(stacks).forEach(status => {
     });
 });
 
+// Mülltonnen-Funktion
+const trashBin = document.getElementById("trash");
+trashBin.addEventListener("dragover", event => event.preventDefault());
+trashBin.addEventListener("drop", event => {
+    event.preventDefault();
+    const id = event.dataTransfer.getData("id");
+    if (confirm("Karte löschen oder ins Archiv verschieben? (OK = Löschen, Abbrechen = Archiv)")) {
+        db.collection("cards").doc(id).delete();
+    } else {
+        db.collection("cards").doc(id).update({ status: "archive", updatedAt: new Date().toISOString() });
+    }
+});
+
+// Archiv minimieren/erweitern
+document.getElementById("toggleArchive").addEventListener("click", () => {
+    stacks.archive.classList.toggle("minimized");
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById("search").addEventListener("input", searchCards);
+});
+
 loadCards();
