@@ -58,6 +58,21 @@ function loadCards() {
     });
 }
 
+ //card.querySelector(".edit").addEventListener("click", () => editCard(id, data));
+   
+// Bearbeiten einer Karte
+function editCard(id, data) {
+    const newText = prompt("Neuer Text:", data.text);
+    const newColor = prompt("Neue Farbe (rot, blau, gelb, grün, petrol oder hex-code):", data.color);
+    if (newText) {
+        db.collection("cards").doc(id).update({
+            text: newText,
+            color: newColor,
+            updatedAt: new Date().toISOString()
+        });
+    }
+}
+
 // Karte speichern oder aktualisieren
 saveCardBtn.addEventListener("click", () => {
     const title = cardTitleInput.value;
