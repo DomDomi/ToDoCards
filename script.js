@@ -58,7 +58,7 @@ function loadCards() {
     });
 }
 
- //card.querySelector(".edit").addEventListener("click", () => editCard(id, data));
+ 
    
 // Bearbeiten einer Karte
 function editCard(id, data) {
@@ -99,6 +99,7 @@ function renderCard(id, data) {
     card.addEventListener("dragstart", event => {
         event.dataTransfer.setData("id", id);
     });
+    card.querySelector(".edit").addEventListener("click", () => editCard(id, data));
     stacks[data.status].appendChild(card);
 }
 
